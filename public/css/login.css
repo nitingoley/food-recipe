@@ -1,0 +1,36 @@
+
+h1
+{
+    text-align: center;
+    color: red;
+}
+.text
+{
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+ 
+}
+
+input{
+    border-radius: 10px 10px 12px 10px;
+    margin-right: 10px;
+   }
+
+ label
+ {
+   padding: 10px;
+   
+ }
+
+ #l4
+ {
+    margin-left: 50px;
+ }
+
+ 
+input:hover {
+    background-color: rgb(247, 246, 246);
+    color: red;
+    border-color: aqua;
+}

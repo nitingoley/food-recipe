@@ -1,25 +1,32 @@
 require('../models/database');
 const Category = require('../models/Category');
 const Recipe = require('../models/Recipe');
+const User = require("../models/DataEntires");
+
+
+
+
+
+
 
 /**
  * GET /
  * Homepage 
 */
-exports.homepage = async(req, res) => {
+exports.homepage = async (req, res) => {
   try {
     const limitNumber = 5;
     const categories = await Category.find({}).limit(limitNumber);
-    const latest = await Recipe.find({}).sort({_id: -1}).limit(limitNumber);
+    const latest = await Recipe.find({}).sort({ _id: -1 }).limit(limitNumber);
     const thai = await Recipe.find({ 'category': 'Thai' }).limit(limitNumber);
     const american = await Recipe.find({ 'category': 'American' }).limit(limitNumber);
     const chinese = await Recipe.find({ 'category': 'Chinese' }).limit(limitNumber);
 
     const food = { latest, thai, american, chinese };
 
-    res.render('index', { title: 'Cooking Blog - Home', categories, food } );
+    res.render('index', { title: 'Cooking Blog - Home', categories, food });
   } catch (error) {
-    res.satus(500).send({message: error.message || "Error Occured" });
+    res.satus(500).send({ message: error.message || "Error Occured" });
   }
 }
 
@@ -27,75 +34,101 @@ exports.homepage = async(req, res) => {
  * GET /categories
  * Categories 
 */
-exports.exploreCategories = async(req, res) => {
+exports.exploreCategories = async (req, res) => {
   try {
     const limitNumber = 20;
     const categories = await Category.find({}).limit(limitNumber);
-    res.render('categories', { title: 'Cooking Blog - Categories', categories } );
+    res.render('categories', { title: 'Cooking Blog - Categories', categories });
   } catch (error) {
-    res.status(500).send({message: error.message || "Error Occured" });
+    res.status(500).send({ message: error.message || "Error Occured" });
   }
-} 
+}
+
+
+
+
+// render about page  
+
+exports.about = async (req, res) => {
+  await res.render("about")
+}
+
+// rendering the contact page 
+
+exports.contact = async (req, res) => {
+  await res.render("contact");
+}
 
 
 /**
  * GET /categories/:id
  * Categories By Id
 */
-exports.exploreCategoriesById = async(req, res) => { 
+exports.exploreCategoriesById = async (req, res) => {
   try {
     let categoryId = req.params.id;
     const limitNumber = 20;
     const categoryById = await Recipe.find({ 'category': categoryId }).limit(limitNumber);
-    res.render('categories', { title: 'Cooking Blog - Categoreis', categoryById } );
+    res.render('categories', { title: 'Cooking Blog - Categoreis', categoryById });
   } catch (error) {
-    res.satus(500).send({message: error.message || "Error Occured" });
+    res.satus(500).send({ message: error.message || "Error Occured" });
   }
-} 
- 
+}
+
 /**
  * GET /recipe/:id
  * Recipe 
 */
-exports.exploreRecipe = async(req, res) => {
+exports.exploreRecipe = async (req, res) => {
   try {
     let recipeId = req.params.id;
     const recipe = await Recipe.findById(recipeId);
-    res.render('recipe', { title: 'Cooking Blog - Recipe', recipe } );
+    res.render('recipe', { title: 'Cooking Blog - Recipe', recipe });
   } catch (error) {
-    res.satus(500).send({message: error.message || "Error Occured" });
+    res.satus(500).send({ message: error.message || "Error Occured" });
   }
-} 
+}
 
 
 /**
  * POST /search
  * Search 
 */
-exports.searchRecipe = async(req, res) => {
+
+//  Logic for Form filling logic put here 
+
+
+
+
+
+
+
+
+
+exports.searchRecipe = async (req, res) => {
   try {
     let searchTerm = req.body.searchTerm;
-    let recipe = await Recipe.find( { $text: { $search: searchTerm, $diacriticSensitive: true } });
-    res.render('search', { title: 'Cooking Blog - Search', recipe } );
+    let recipe = await Recipe.find({ $text: { $search: searchTerm, $diacriticSensitive: true } });
+    res.render('search', { title: 'Cooking Blog - Search', recipe });
   } catch (error) {
-    res.satus(500).send({message: error.message || "Error Occured" });
+    res.satus(500).send({ message: error.message || "Error Occured" });
   }
-  
+
 }
 
 /**
  * GET /explore-latest
  * Explplore Latest 
 */
-exports.exploreLatest = async(req, res) => {
+exports.exploreLatest = async (req, res) => {
   try {
     const limitNumber = 20;
     const recipe = await Recipe.find({}).sort({ _id: -1 }).limit(limitNumber);
-    res.render('explore-latest', { title: 'Cooking Blog - Explore Latest', recipe } );
+    res.render('explore-latest', { title: 'Cooking Blog - Explore Latest', recipe });
   } catch (error) {
-    res.satus(500).send({message: error.message || "Error Occured" });
+    res.satus(500).send({ message: error.message || "Error Occured" });
   }
-} 
+}
 
 
 
@@ -103,40 +136,55 @@ exports.exploreLatest = async(req, res) => {
  * GET /explore-random
  * Explore Random as JSON
 */
-exports.exploreRandom = async(req, res) => {
+exports.exploreRandom = async (req, res) => {
   try {
     let count = await Recipe.find().countDocuments();
     let random = Math.floor(Math.random() * count);
     let recipe = await Recipe.findOne().skip(random).exec();
-    res.render('explore-random', { title: 'Cooking Blog - Explore Latest', recipe } );
+    res.render('explore-random', { title: 'Cooking Blog - Explore Latest', recipe });
   } catch (error) {
-    res.satus(500).send({message: error.message || "Error Occured" });
+    res.satus(500).send({ message: error.message || "Error Occured" });
   }
-} 
+}
+
+
+// This is code for Signup page 
+
+// exports.signup = async (req, res) => {
+//   await res.render("signup")
+// }
+
+// // This code for Login Page 
+
+// exports.login = async (req, res) => {
+//   await res.render("login")
+// }
+
+
 
 
 /**
  * GET /submit-recipe
  * Submit Recipe
 */
-exports.submitRecipe = async(req, res) => {
+exports.submitRecipe = async (req, res) => {
   const infoErrorsObj = req.flash('infoErrors');
   const infoSubmitObj = req.flash('infoSubmit');
-  res.render('submit-recipe', { title: 'Cooking Blog - Submit Recipe', infoErrorsObj, infoSubmitObj  } );
+  res.render('submit-recipe', { title: 'Cooking Blog - Submit Recipe', infoErrorsObj, infoSubmitObj });
 }
 
 /**
  * POST /submit-recipe
  * Submit Recipe
 */
-exports.submitRecipeOnPost = async(req, res) => {
+exports.submitRecipeOnPost = async (req, res) => {
   try {
 
     let imageUploadFile;
     let uploadPath;
     let newImageName;
 
-    if(!req.files || Object.keys(req.files).length === 0){
+    if (!req.files || Object.keys(req.files).length === 0) {
       console.log('No Files where uploaded.');
     } else {
 
@@ -145,8 +193,8 @@ exports.submitRecipeOnPost = async(req, res) => {
 
       uploadPath = require('path').resolve('./') + '/public/uploads/' + newImageName;
 
-      imageUploadFile.mv(uploadPath, function(err){
-        if(err) return res.satus(500).send(err);
+      imageUploadFile.mv(uploadPath, function (err) {
+        if (err) return res.satus(500).send(err);
       })
 
     }
@@ -159,7 +207,7 @@ exports.submitRecipeOnPost = async(req, res) => {
       category: req.body.category,
       image: newImageName
     });
-    
+
     await newRecipe.save();
 
     req.flash('infoSubmit', 'Recipe has been added.')
@@ -170,6 +218,24 @@ exports.submitRecipeOnPost = async(req, res) => {
     res.redirect('/submit-recipe');
   }
 }
+
+
+
+
+// Logic for Signup or login data in form  
+
+// exports.signup =  async(req , res)=>{
+//   try {
+//     const { username, email, password } = req.body;
+//     const newUser = new User({ username, email, password });
+//     await newUser.save();
+//     res.redirect("/")
+//   } catch (error) {
+//     res.status(400).json({ message: error.message });
+
+//    }
+// }
+
 
 
 
@@ -202,69 +268,106 @@ exports.submitRecipeOnPost = async(req, res) => {
  * Dummy Data Example 
 */
 
-// async function insertDymmyCategoryData(){
-//   try {
-//     await Category.insertMany([
-//       {
-//         "name": "Thai",
-//         "image": "thai-food.jpg"
-//       },
-//       {
-//         "name": "American",
-//         "image": "american-food.jpg"
-//       }, 
-//       {
-//         "name": "Chinese",
-//         "image": "chinese-food.jpg"
-//       },
-//       {
-//         "name": "Mexican",
-//         "image": "mexican-food.jpg"
-//       }, 
-//       {
-//         "name": "Indian",
-//         "image": "indian-food.jpg"
-//       },
-//       {
-//         "name": "Spanish",
-//         "image": "spanish-food.jpg"
-//       }
-//     ]);
-//   } catch (error) {
-//     console.log('err', + error)
-//   }
-// }
+async function insertDymmyCategoryData() {
+  try {
+    await Category.insertMany([
+      {
+        "name": "Dal makhani",
+        "image": "img5.jpg"
+      },
+      {
+        "name": "Kadai Paneer",
+        "image": "img4.jpg"
+      },
+      {
+        "name": "Channa Masla",
+        "image": "img2.jpg"
+      },
+      {
+        "name": "Mexican Food",
+        "image": "mexican-food.jpg"
+      },
+      {
+        "name": "Indian",
+        "image": "indian-food.jpg"
+      },
+      {
+        "name": "Spanish",
+        "image": "spanish-food.jpg"
+      }
+    ]);
+  } catch (error) {
+    console.log('err', + error)
+  }
+}
 
 // insertDymmyCategoryData();
 
 
-// async function insertDymmyRecipeData(){
+// async function insertDymmyRecipeData() {
 //   try {
 //     await Recipe.insertMany([
-//       { 
-//         "name": "Recipe Name Goes Here",
-//         "description": `Recipe Description Goes Here`,
-//         "email": "recipeemail@raddy.co.uk",
+//       {
+//         "name": "Chicken Curry",
+//         "description": `Special spicy chicken buter`,
+//         "email": "nitingoley42@gmail.com",
 //         "ingredients": [
 //           "1 level teaspoon baking powder",
 //           "1 level teaspoon cayenne pepper",
 //           "1 level teaspoon hot smoked paprika",
 //         ],
-//         "category": "American", 
-//         "image": "southern-friend-chicken.jpg"
+//         "category": "Indian",
+//         "image": "ddd.jpg"
 //       },
-//       { 
-//         "name": "Recipe Name Goes Here",
-//         "description": `Recipe Description Goes Here`,
-//         "email": "recipeemail@raddy.co.uk",
+//       {
+//         "name": "Khandvi",
+//         "description": `Gujrati Special`,
+//         "email": "nitingoley42@gmail.com",
 //         "ingredients": [
 //           "1 level teaspoon baking powder",
 //           "1 level teaspoon cayenne pepper",
 //           "1 level teaspoon hot smoked paprika",
 //         ],
-//         "category": "American", 
-//         "image": "southern-friend-chicken.jpg"
+//         "category": "Indian",
+//         "image": "d3.jpg"
 //       },
+//       {
+//         "name": "Khakhra",
+//         "description": `Gujrati Special`,
+//         "email": "nitingoley42@gmail.com",
+//         "ingredients": [
+//           "1 level teaspoon baking powder",
+//           "1 level teaspoon cayenne pepper",
+//           "1 level teaspoon hot smoked paprika",
+//         ],
+//         "category": "Indian",
+//         "image": "d2.jpg"
+//       },
+//       {
+//         "name": "Momos",
+//         "description": `Common Street food`,
+//         "email": "nitingoley42@gmail.com",
+//         "ingredients": [
+//           "1 level teaspoon baking powder",
+//           "1 level teaspoon cayenne pepper",
+//           "1 level teaspoon hot smoked paprika",
+//         ],
+//         "category": "Indian",
+//         "image": "mo.jpg"
+//       },
+//       {
+//         "name": "Dessert Chandrakala",
+//         "description": `Indian sweets`,
+//         "email": "nitingoley42@gmail.com",
+//         "ingredients": [
+//           "1 level teaspoon baking powder",
+//           "1 level teaspoon cayenne pepper",
+//           "1 level teaspoon hot smoked paprika",
+//         ],
+//         "category": "Indian",
+//         "image": "sw.jpg"
+//       },
+
 //     ]);
 //   } catch (error) {
 //     console.log('err', + error)
@@ -273,3 +376,50 @@ exports.submitRecipeOnPost = async(req, res) => {
 
 // insertDymmyRecipeData();
 
+// exports.signup = 
+
+
+
+
+
+async function insertDymmyRecipeData() {
+  try {
+    await Recipe.insertMany([
+      {
+        "name": "Apple Pie",
+        "description": `Apple pie`,
+        "email": "nitingoley@gmail.com",
+        "ingredients": [
+
+          "1 cup whole wheat flour (- 120 grams)",
+          "  ½ cup all-purpose flour (- 62.5 grams)",
+          " ¼ cup olive oil (or sunflower oil)",
+          " ⅓ cup water (- at room temperature or add as required)",
+          "   ½ teaspoon salt (or as required)"
+
+        ],
+        "category": "American",
+        "image": "a1.jpg"
+      },
+      {
+        "name": "Clam Chowder",
+        "description": `Clam Chowder`,
+        "email": "parasgangwar@gmail.com",
+        "ingredients": [
+
+          "  4 slices bacon(diced)",
+          "2 tablespoons unsalted butter",
+          "2 cloves garlic(minced)",
+          "1 onion(diced)",
+          "1 / 2 teaspoon dried thyme"
+        ],
+        "category": "American",
+        "image": "a2.jpg"
+      },
+    ]);
+  } catch (error) {
+    console.log('err', + error)
+  }
+}
+
+insertDymmyRecipeData();

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/login.css">
+    <title>Login Page</title>
+</head>
+
+<body>
+    <h1 id="reg">Login User</h1>
+    <form action="/login" method="post">
+        <div class="text"> 
+            <label for="email">Email:</label><br>
+            <input type="email" id="email" name="email" required><br>
+            </div>
+            <div class="text">
+            <label for="password">Password:</label><br>
+            <input type="password" id="password" name="password" required><br><br>
+            </div>
+        <br>
+        <div class="text">
+            <input id="l4" type="submit">
+        </div>
+    </form>
+    <br>
+    <div class="text-center" > Create new account
+        <a href="/signup"> Sign up</a>
+
+    </div>
+
+    <%= if (successMessages.length > 0) { %>
+        <div class="alert alert-success">
+            <% successMessages.forEach(function(message){ %>
+                <%- message %><br>
+            <% }); %>
+        </div>
+    <% } %>
+    <%= if (errorMessages.length > 0) { %>
+        <div class="alert alert-danger">
+            <% errorMessages.forEach(function(message){ %>
+                <%- message %><br>
+            <% }); %>
+        </div>
+    <% } %>
+    
+</body>
+
+</html>

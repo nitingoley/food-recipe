@@ -9,6 +9,35 @@ body {
   background-color: rgb(243,243,243);
 }
 
+
+
+li{
+  color: red;
+}
+
+
+#voiceButton
+{
+  outline-color: aqua;
+   /* border: rgb(7, 131, 240); */
+   background-color: aliceblue;
+   color: rgb(7, 131, 240);
+}
+
+
+li
+{
+  list-style: none;
+}
+
+
+
+
+i{
+  padding: 0 12px;
+}
+
+
 a { color: var(--bs-dark); }
 
 
@@ -50,3 +79,13 @@ a { color: var(--bs-dark); }
   /* height: 70px; */
   width: 210px;
 }
+
+
+span a
+{
+  color: rgb(0, 16, 235);
+  text-decoration: none;
+}
+
+
+ 
